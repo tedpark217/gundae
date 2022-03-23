@@ -1,7 +1,7 @@
 using System;
 
 class Arrow{
-	//can't use init; cuz ubuntu 14...
+	//can't use init; cuz ubuntu 14..
 	public ArrowHead _arrowhead {get; set; } = ArrowHead.Steel;
 	public Fletching _fletching {get; set; } = Fletching.Plastic;
 	public int _shaft {get; set;} = 0;
