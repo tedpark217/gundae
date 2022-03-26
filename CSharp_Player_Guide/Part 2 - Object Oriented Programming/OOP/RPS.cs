@@ -116,7 +116,7 @@ class GameTest{
 		
 		RPSGame game = new RPSGame(p1, p2);
 		
-		while(game._round < roundNum){
+		while(game._round <= roundNum){
 			game.AskRPS();
 		}
 	}
