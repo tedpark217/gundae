@@ -24,8 +24,10 @@ class Player{
 
 class Board{
 	private char[][] _board;
+	private char _winner;
 	
 	public Board(){
+		_winner = '\0';
 		_board = new char[][]{
 			new char[3],
 			new char[3],
@@ -78,19 +80,21 @@ class Board{
 			bool rowTest = checkRow(i);
 			
 			if(rowTest){
+				_winner = _board[i][0];
 				return true;
 			}
 			bool colTest = checkCol(i);
 
 			if(colTest){
+				_winner = _board[0][i];
 				return true;
 			}
 		}
 		return false;
 	}
 	
-	public string result(){
-		return "hi";
+	public char result(){
+		return _winner;
 	}
 	
 	public bool placeable(int position){
@@ -219,7 +223,7 @@ class TTTGame{
 					Console.WriteLine($"It is {_p2.GetName()}'s turn.");
 				}
 				_gameBoard.Display();
-				Console.WriteLine("What square do you want to play in?");
+				Console.Write("What square do you want to play in?: ");
 				input = Convert.ToInt32(Console.ReadLine());
 			}
 			while(!_gameBoard.placeable(input));
@@ -238,7 +242,13 @@ class TTTGame{
 			}
 		}
 		
-		Console.WriteLine($"Winner of round {currRound} is {_gameBoard.result()}.");
+		if(_gameBoard.result() == 'O'){
+			Console.WriteLine($"Winner of round {currRound} is {_p1.GetName()}.");
+		}
+		else{
+			Console.WriteLine($"Winner of round {currRound} is {_p2.GetName()}.");
+		}
+		
 	}
 	
 	//play the game
@@ -248,7 +258,7 @@ class TTTGame{
 		
 		while(checkRound(round)){
 			StartRound(round);
-			_round++;
+			round++;
 		}
 		
 		if(_p1.GetScore() > _p2.GetScore()){
