@@ -178,6 +178,7 @@ class PuzzleGame{
 		while(!_newPuzzle.checkWin()){
 			AskMovement();
 		}
+		_newPuzzle.Display();
 		Console.WriteLine("Congratulations. You've beat the game.");
 	}
 }
@@ -187,10 +188,10 @@ class PuzzleTest{
 		
 		//create new puzzle
 		string[][] newGame = new string[][]{
-			new string[] {" 1"," 3","10","13"}, 
-			new string[] {" 4"," 2","  "," 6"}, 
-			new string[] {"11"," 8"," 7","12"}, 
-			new string[] {" 9","14"," 5","15"}
+			new string[] {" 1"," 2"," 3"," 4"}, 
+			new string[] {" 5"," 6"," 7"," 8"}, 
+			new string[] {"13"," 9","10","11"}, 
+			new string[] {"14","15","  ","12"}
 		};
 		
 		//input to puzzle class
