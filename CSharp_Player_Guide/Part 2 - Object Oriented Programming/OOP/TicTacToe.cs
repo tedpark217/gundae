@@ -73,9 +73,33 @@ class Board{
 		return boolean;
 	}
 	
+	//check diagonal
+	private bool checkDiagonal(){
+		char mid = _board[1][1];
+		//if position 5 is empty, no diagonals
+		if(mid == '\0'){
+			return false;
+		}
+		
+		//check two diagonals
+		if(mid == _board[0][0] && mid == _board[2][2]){
+			return true;
+		}
+		if(mid == _board[0][2] && mid == _board[2][0]){
+			return true;
+		}
+		return false;
+	}
+	
 	//return true if game finished, false if game didn't finish
 	//finished when:	player made a row/col
 	public bool checkFinished(){
+		bool diag = checkDiagonal();
+		if(diag){
+			_winner = _board[1][1];
+			return true;
+		}
+		
 		for(int i = 0; i < _board.Length; i++){
 			bool rowTest = checkRow(i);
 			
@@ -242,10 +266,13 @@ class TTTGame{
 			}
 		}
 		
+		_gameBoard.Display();
 		if(_gameBoard.result() == 'O'){
+			_p1.Win();
 			Console.WriteLine($"Winner of round {currRound} is {_p1.GetName()}.");
 		}
 		else{
+			_p2.Win();
 			Console.WriteLine($"Winner of round {currRound} is {_p2.GetName()}.");
 		}
 		
@@ -270,9 +297,7 @@ class TTTGame{
 		else{
 			Console.WriteLine("It's a draw.");
 		}
-	}
-	
-	
+	}	
 }
 
 class TicTacToe{
