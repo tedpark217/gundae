@@ -18,7 +18,7 @@ class Testing{
 		//Console.WriteLine(testing[0].Length);
 		for(int i = 0; i < testing[0].Length; i++){
 			Console.WriteLine(testing[2][i]);
-		}*/
+		}
 		
 		int[][] empty = new int[][]{
 			new int[4],
@@ -28,6 +28,9 @@ class Testing{
 		};
 		for(int i = 0; i < empty[0].Length; i++){
 			Console.WriteLine(empty[2,i]);
-		}
+		}*/
+		
+		char[] hello = new char[2];
+		Console.WriteLine(hello[0] == '\0');
 	}
 }
