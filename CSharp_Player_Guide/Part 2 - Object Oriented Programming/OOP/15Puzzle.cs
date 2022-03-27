@@ -48,51 +48,76 @@ class Puzzle{
 	}
 	
 	
-	//parameter: string (right r or left l)
-	public void moveRow(string RL){
+	//parameter: char (right r or left l), int number of tiles to move
+	public void moveRow(char RL, int numTile){
 		//get row index with empty tile
 		int[] empty = canMove();
 		int emptyRow = empty[0];
 		
 		//move the given row to right
-		if(RL == "r"){
+		if(RL == 'r'){
 			int emptyIdx = Array.IndexOf(_puzzle[emptyRow],"  ");
-			for(int i = emptyIdx; i > 0; i--){
+			if(emptyIdx == 0){ //can't shift right
+				return;
+			}
+			if(numTile > emptyIdx){ //not enough tiles to shift
+				return;
+			}
+			for(int i = emptyIdx; i > emptyIdx - numTile; i--){
 				_puzzle[emptyRow][i] = _puzzle[emptyRow][i-1];
 			}
-			_puzzle[emptyRow][0] = "  ";
+			_puzzle[emptyRow][emptyIdx - numTile] = "  ";
 		}
 		//move the given row to left
-		if(RL == "l"){
+		else{
 			int emptyIdx = Array.IndexOf(_puzzle[emptyRow],"  ");
-			for(int i = emptyIdx; i < _puzzle[emptyRow].Length-1; i++){
+			if(emptyIdx == 3){ //can't shift left
+				return;
+			}
+			if(numTile > 3 - emptyIdx){ //not enough tiles to shift
+				return;
+			}
+			
+			for(int i = emptyIdx; i < emptyIdx + numTile; i++){
 				_puzzle[emptyRow][i] = _puzzle[emptyRow][i+1];
 			}
-			_puzzle[emptyRow][3] = "  ";
+			_puzzle[emptyRow][emptyIdx + numTile] = "  ";
 		}
 	}
 	
 	
-	//parameter: string (up u or down d)
-	public void moveCol(string UD){
+	//parameter: char (up u or down d), int number of tiles to move
+	public void moveCol(char UD, int numTile){
 		//get col index with empty tile
 		int[] empty = canMove();
 		int emptyRow = empty[0];
 		int emptyCol = empty[1];
 		
 		//move the given col up
-		if(UD == "u"){
-			for(int i = emptyRow; i < _puzzle.Length-1; i++){
+		if(UD == 'u'){
+			if(emptyRow == 3){ //can't shift up
+				return;
+			}
+			if(numTile > 3 - emptyRow){ //not enough tiles to shift
+				return;
+			}
+			for(int i = emptyRow; i < emptyRow + numTile; i++){
 				_puzzle[i][emptyCol] = _puzzle[i+1][emptyCol];
 			}
-			_puzzle[3][emptyCol] = "  ";
+			_puzzle[emptyRow + numTile][emptyCol] = "  ";
 		}
 		//move the given col down
-		if(UD == "d"){
-			for(int i = emptyRow; i > 0; i--){
+		else{
+			if(emptyRow == 0){ //can't shift down
+				return;
+			}
+			if(numTile > emptyRow){ //not enough tiles to shift
+				return;
+			}
+			for(int i = emptyRow; i > emptyRow - numTile; i--){
 				_puzzle[i][emptyCol] = _puzzle[i-1][emptyCol];
 			}
-			_puzzle[0][emptyCol] = "  ";
+			_puzzle[emptyRow - numTile][emptyCol] = "  ";
 		}
 	}
 	
@@ -123,18 +148,15 @@ class PuzzleGame{
 	public void AskMovement(){
 		_newPuzzle.Display();
 		Console.WriteLine("Where to move?");
-		Console.Write("Type first letter in lowercase (Up, Down, Left, Right): ");
+		Console.Write("Type first letter (Up, Down, Left, Right) and num of tiles to move: ");
 		
 		bool correct = false;
+		string input = "";
 		
 		do{
-			string input = Console.ReadLine();
-			if(input == "u" || input == "d"){
-				_newPuzzle.moveCol(input);
-				correct = true;
-			}
-			else if(input == "r" || input == "l"){
-				_newPuzzle.moveRow(input);
+			input = Console.ReadLine();
+			if(input[0] == 'u' || input[0] == 'd' || input[0] == 'r' || input[0] == 'l'){
+			
 				correct = true;
 			}
 			else{
@@ -142,6 +164,14 @@ class PuzzleGame{
 			}
 		}
 		while(!correct);
+		
+		if(input[0] == 'u' || input[0] == 'd'){
+			
+			_newPuzzle.moveCol(input[0], Convert.ToInt32(input[1] - '0'));
+		}
+		else{
+			_newPuzzle.moveRow(input[0], Convert.ToInt32(input[1] - '0'));
+		}
 	}
 	
 	public void Update(){
