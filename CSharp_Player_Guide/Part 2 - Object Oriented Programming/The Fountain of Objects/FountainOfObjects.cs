@@ -18,12 +18,25 @@ class GameManager{
 		GamePlayer = newPlayer;
 		
 		_senses = new ISense[]{
-			
+			new EntranceSense(),
+			new FountainSense()
 		};
 	}
 	
+	public void DisplayStatus(){
+		Console.WriteLine("-------------------");
+		Console.WriteLine($"You are in room at (Row={GamePlayer.Position.Row}, Column={GamePlayer.Position.Col}).");
+		foreach(ISense sense in _senses){
+			if(sense.CanSense(this)){
+				sense.DisplaySense(this);
+			}
+		}
+	}
+	
 	public void Run(){
-		
+		while(!HasWon){
+			DisplayStatus();
+		}
 	}
 	
 	
@@ -40,12 +53,19 @@ class World{
 		_grid = new RoomType[][]{};
 	}
 	
-	public RoomType GetCurrentRoom(){
-		
+	public RoomType GetCurrentRoom(Position currPosition){
+		if(onMap(currPosition)){
+			return _grid[currPosition.Row][currPosition.Col];
+		}
 	}
 	
-	public bool canMove(){
-		
+	public bool onMap(Position currPosition){
+		if(Position.Row >= 0 && Position.Row < Rows && Position.Col >= 0 && Position.Col < Cols){
+			return true;
+		}
+		else{
+			return false;
+		}
 	}
 }
 
@@ -105,25 +125,62 @@ public class MoveCommand : ICommand{
 //command to enable the fountain
 public class EnableFountainCommand : ICommand{
 	void Execute(GameManager game){
-		
+		RoomType currentRoom = game.GetCurrentRoom();
+		if(currentRoom == RoomType.Fountain){
+			game.FountainOnOff = true;
+		}
+		else{
+			Console.WriteLine("not at fountain");
+		}
+	}
+}
+
+//interface to different senses
+public interface ISense{
+	bool CanSense(GameManager game);
+	
+	void DisplaySense(GameManager game);
+}
+
+//sense when in entrance
+public class EntranceSense : ISense{
+	bool CanSense(GameManager game){
+		if(game.World.GetCurrentRoom(game.GamePlayer.Position) == RoomType.Entrance){
+			return true;
+		}
+		else{
+			return false;
+		}
+	}
+	
+	void DisplaySense(GameManager game){
+		Console.WriteLine("You see light in this room coming from outside the cavern. This is the entrance.");
+	}
+}
+
+//sense when in fountain
+public class FountainSense : ISense{
+	bool CanSense(GameManager game){
+		if(game.World.GetCurrentRoom(game.GamePlayer.Position) == RoomType.Fountain){
+			return true;
+		}
+		else{
+			return false;
+		}
+	}
+	
+	void DisplaySense(GameManager game){
+		if(!FountainOnOff){
+			Console.WriteLine("You hear water dripping in this room. The Fountain of Objects is here!");
+		}
+		else{
+			Console.WriteLine("You hear the rushing waters from the Fountain of Objects. It has been reactivated!");
+		}
 	}
 }
 
 //to keep track of positions
-public struct Position{
-	public int Row {get; set;}
-	public int Col {get; set;}
-	
-	public Position(){
-		Row = 0;
-		Col = 0;
-	}
-	
-	public Position(int newRow, int newCol){
-		Row = newRow;
-		Col = newCol;
-	}
-}
+public record Position(int Row, int Col);
 
 //direction of movement
 enum Direction {North, South, East, West}
