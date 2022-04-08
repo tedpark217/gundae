@@ -9,10 +9,12 @@ public class PlayerRun : MonoBehaviour
 
     private Rigidbody2D body;
     private BoxCollider2D boxCollider;
+    AudioSource jumpSound;
 
     private void Awake(){
         body = GetComponent<Rigidbody2D>();
         boxCollider = GetComponent<BoxCollider2D>();
+        jumpSound = GetComponent<AudioSource>();
     }
 
     // Update is called once per frame
@@ -28,6 +30,7 @@ public class PlayerRun : MonoBehaviour
         if(CheckGrounded())
         {
             body.velocity = new Vector2(body.velocity.x, jumpForce);
+            jumpSound.Play();
         }
     }
 
